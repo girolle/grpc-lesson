@@ -1,0 +1,88 @@
+// proto/service.proto
+syntax = "proto3";
+
+// Определяем пакет для наших сообщений и сервисов.
+package tutorial;
+
+// Указываем, какой Go-пакет будет использоваться при генерации кода.
+// Поменяйте github.com/yourusername/grpc-tutorial/proto на актуальный путь вашего проекта.
+
+
+//////////////////////////////
+// Сообщения для работы с партнёрами
+//////////////////////////////
+
+// Сообщение, описывающее партнёра.
+message Partner {
+  int32 id = 1;         // Уникальный идентификатор партнёра
+  string name = 2;      // Имя партнёра
+  string email = 3;     // Email партнёра
+}
+
+// Запрос для создания партнёра.
+message CreatePartnerRequest {
+  string name = 1;      // Имя нового партнёра
+  string email = 2;     // Email нового партнёра
+}
+
+// Ответ на запрос создания партнёра.
+message CreatePartnerResponse {
+  Partner partner = 1;  // Информация о созданном партнёре
+}
+
+// Запрос для получения статистики по партнёру.
+message GetPartnerStatsRequest {
+  int32 partner_id = 1; // ID партнёра, статистику которого запрашивают
+}
+
+// Сообщение со статистикой партнёра.
+message PartnerStats {
+  int32 partner_id = 1;   // ID партнёра
+  int32 clicks = 2;       // Количество кликов по партнерским ссылкам
+  int32 conversions = 3;  // Количество конверсий (например, покупок)
+}
+
+//////////////////////////////
+// Сообщения для работы с сокращением ссылок
+//////////////////////////////
+
+// Запрос на сокращение ссылки.
+message ShortenLinkRequest {
+  string original_url = 1; // Исходная длинная ссылка
+}
+
+// Ответ, содержащий сокращённую ссылку.
+message ShortenLinkResponse {
+  string short_url = 1; // Сокращённая ссылка
+}
+
+// Запрос на получение статистики по сокращённой ссылке.
+message GetLinkStatsRequest {
+  string short_url = 1; // Сокращённая ссылка, статистику по которой запрашивают
+}
+
+// Сообщение со статистикой сокращённой ссылки.
+message LinkStats {
+  string short_url = 1; // Сокращённая ссылка
+  int32 clicks = 2;     // Количество кликов по ней
+}
+
+//////////////////////////////
+// Определение сервисов
+//////////////////////////////
+
+// Сервис для работы с партнёрами.
+service PartnerService {
+  // Метод создания партнёра.
+  rpc CreatePartner(CreatePartnerRequest) returns (CreatePartnerResponse);
+  // Метод получения статистики партнёра.
+  rpc GetPartnerStats(GetPartnerStatsRequest) returns (PartnerStats);
+}
+
+// Сервис для сокращения ссылок.
+service LinkShorteningService {
+  // Метод сокращения ссылки.
+  rpc ShortenLink(ShortenLinkRequest) returns (ShortenLinkResponse);
+  // Метод получения статистики по сокращённой ссылке.
+  rpc GetLinkStats(GetLinkStatsRequest) returns (LinkStats);
+}
